@@ -1,0 +1,24 @@
+{
+  "name": "casparser",
+  "version": "1.0.0",
+  "description": "Parser for CAMS/Karvy CAS PDF",
+  "main": "casparser.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "Considated Account Statment",
+    "CAS Parser",
+    "CAS PDF"
+  ],
+  "homepage": "https://github.com/ansingh/casparser",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ansingh/casparser"
+  },
+  "dependencies": {
+    "pdf2json": "github:ansingh/pdf2json#master"
+  },
+  "author": "Antarpreet Singh",
+  "license": "MIT"
+}
