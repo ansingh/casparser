@@ -41,16 +41,40 @@ function ParseRawJSON(pdfData) {
         //  Get folio
         if (pdfText.R[0].T.startsWith("Folio%20No")) {
           let folioNo = decodeURIComponent(pdfText.R[0].T.substr(16));
-          let panIdx = pdfTextIdx - 4;
+          let panIdxMin = pdfTextIdx - 30;
+          let panIdx = pdfTextIdx - 3;
           let panStr = pdfPage.Texts[panIdx].R[0].T;
 
+          if (panIdxMin < 0) panIdxMin = 0;
+
+          // Since PAN entry may not exist, stop at KYC
+          while (panIdx > panIdxMin && !panStr.startsWith("PAN") && !panStr.startsWith("KYC")) {
+            panIdx--;
+            panStr = pdfPage.Texts[panIdx].R[0].T;
+          }
+
+          // If PAN exists, it is behind KYC
           if (panStr.startsWith("KYC")) {
             panIdx--;
             panStr = pdfPage.Texts[panIdx].R[0].T;
           }
 
+          let fundNameIdx = panIdx + 2;
+          let fundNameStr = "";
+
+          while (fundNameIdx < pdfTextIdx && !pdfPage.Texts[fundNameIdx].R[0].T.startsWith("Registrar")) {
+            fundNameStr = fundNameStr + decodeURIComponent(pdfPage.Texts[fundNameIdx].R[0].T);
+            fundNameIdx++;
+          }
+
+          // Slight cleanup : remove spaces in the code
+          let fundNameArr = fundNameStr.split('-');
+
+          fundNameArr[0] = fundNameArr[0].split(' ').join('');
+          fundNameStr = fundNameArr.join('-');
+
           curfund = {
-            Name : decodeURIComponent(pdfPage.Texts[panIdx + 2].R[0].T),
+            Name : fundNameStr,
             Labels : {Folio: folioNo},
             Transactions : []
           };
