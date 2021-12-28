@@ -17,7 +17,7 @@
     "url": "git://github.com/ansingh/casparser"
   },
   "dependencies": {
-    "pdf2json": "github:ansingh/pdf2json#master"
+    "pdf2json": "latest"
   },
   "author": "Antarpreet Singh",
   "license": "MIT"

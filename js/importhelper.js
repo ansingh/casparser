@@ -10,13 +10,11 @@ function ParseRawJSON(pdfData) {
   let curfund = null;
   let curtrans = { };
   let stage = 0;
-  let widthFactor = pdfData.formImage.Width / (8.5 * 72);
 
-  if (exports.Verbose) console.log('WidthFactor = ' + widthFactor);
-
-  for (pdfPageIdx in pdfData.formImage.Pages) {
+  for (pdfPageIdx in pdfData.Pages) {
     let entryheaders = { };
-    let pdfPage = pdfData.formImage.Pages[pdfPageIdx];
+    let pdfPage = pdfData.Pages[pdfPageIdx];
+    let widthFactor = pdfPage.Width / (8.5 * 72);
 
     for (pdfTextIdx in pdfPage.Texts) {
       let pdfText = pdfPage.Texts[pdfTextIdx];
@@ -150,7 +148,7 @@ exports.LoadPdf = function (filepath, pdf_pass, out_cb)
     const PDFParser = require("pdf2json");
     const filename = filepath.split('\\').pop().split('/').pop();
 
-    let pdfParser = new PDFParser(null, false);
+    let pdfParser = new PDFParser(null, false, pdf_pass);
     var outData = {};
 
     pdfParser.on("pdfParser_dataError", errData => {
@@ -172,9 +170,8 @@ exports.LoadPdf = function (filepath, pdf_pass, out_cb)
     });
 
     if (exports.Verbose) console.log("Opening PDF file " + filename);
-    pdfParser.loadPDF(filepath.toString(), {password:pdf_pass.toString()});
+    pdfParser.loadPDF(filepath.toString());
 }
-
 
 function GetFinYear(dateStr) {
   let tDate = new Date(dateStr);
